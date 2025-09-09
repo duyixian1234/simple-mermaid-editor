@@ -1,10 +1,14 @@
 import { createSignal, createEffect, onMount } from 'solid-js';
 import mermaid from 'mermaid';
 
-export function MermaidPreview(props) {
-  const [error, setError] = createSignal(null);
+interface MermaidPreviewProps {
+  code: string;
+  isDarkMode: boolean;
+}
+
+export function MermaidPreview(props: MermaidPreviewProps) {
   const [isLoading, setIsLoading] = createSignal(false);
-  let previewRef;
+  let previewRef: HTMLDivElement | undefined;
 
   onMount(() => {
     mermaid.initialize({
@@ -27,7 +31,6 @@ export function MermaidPreview(props) {
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       mermaid.initialize({
@@ -51,10 +54,9 @@ export function MermaidPreview(props) {
 
       const { svg } = await mermaid.render('mermaid-diagram', code);
       previewRef.innerHTML = svg;
-      setError(null);
     } catch (err) {
       console.error('Mermaid render error:', err);
-      setError(err.message || 'Failed to render diagram');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to render diagram';
       previewRef.innerHTML = `
         <div class="flex items-center justify-center h-full">
           <div class="text-center">
@@ -64,7 +66,7 @@ export function MermaidPreview(props) {
               </svg>
             </div>
             <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Render Error</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 max-w-md">${err.message || 'Invalid Mermaid syntax'}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 max-w-md">${errorMessage}</p>
           </div>
         </div>
       `;
