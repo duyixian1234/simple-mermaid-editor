@@ -1,10 +1,12 @@
-import { createSignal, createEffect, onMount } from 'solid-js';
+import { createSignal, onMount } from 'solid-js';
 import { CodeEditor } from './CodeEditor';
 import { MermaidPreview } from './MermaidPreview';
 import { Toolbar } from './Toolbar';
 import { TemplateSelector } from './TemplateSelector';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+
+type ExportFormat = 'svg' | 'png' | 'pdf';
 
 const defaultMermaidCode = `graph TD
     A[Start] --> B{Is it?}
@@ -33,7 +35,7 @@ export function MermaidEditor() {
     localStorage.setItem('theme', newTheme ? 'dark' : 'light');
   };
 
-  const exportDiagram = async (format) => {
+  const exportDiagram = async (format: ExportFormat) => {
     const previewElement = document.getElementById('mermaid-preview');
     if (!previewElement) return;
 
@@ -85,7 +87,7 @@ export function MermaidEditor() {
     }
   };
 
-  const handleTemplateSelect = (template) => {
+  const handleTemplateSelect = (template: string) => {
     setCode(template);
     setIsTemplateOpen(false);
   };

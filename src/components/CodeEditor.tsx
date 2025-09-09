@@ -4,9 +4,15 @@ import { EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
 
-export function CodeEditor(props) {
-  let editorRef;
-  let view;
+interface CodeEditorProps {
+  code: string;
+  onChange: (value: string) => void;
+  isDarkMode: boolean;
+}
+
+export function CodeEditor(props: CodeEditorProps) {
+  let editorRef: HTMLDivElement | undefined;
+  let view: EditorView | undefined;
 
   onMount(() => {
     const extensions = [
@@ -50,7 +56,7 @@ export function CodeEditor(props) {
 
     view = new EditorView({
       state,
-      parent: editorRef
+      parent: editorRef!
     });
   });
 

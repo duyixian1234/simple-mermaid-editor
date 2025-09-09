@@ -1,9 +1,18 @@
 import { createSignal } from 'solid-js';
 
-export function Toolbar(props) {
+type ExportFormat = 'svg' | 'png' | 'pdf';
+
+interface ToolbarProps {
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
+  onExport: (format: ExportFormat) => void;
+  onOpenTemplates: () => void;
+}
+
+export function Toolbar(props: ToolbarProps) {
   const [exportDropdownOpen, setExportDropdownOpen] = createSignal(false);
 
-  const handleExport = (format) => {
+  const handleExport = (format: ExportFormat) => {
     props.onExport(format);
     setExportDropdownOpen(false);
   };

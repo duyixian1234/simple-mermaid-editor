@@ -1,6 +1,20 @@
 import { createSignal } from 'solid-js';
 
-const templates = {
+interface Template {
+  icon: string;
+  code: string;
+}
+
+interface TemplateCollection {
+  [key: string]: Template;
+}
+
+interface TemplateSelectorProps {
+  onSelect: (template: string) => void;
+  onClose: () => void;
+}
+
+const templates: TemplateCollection = {
   'Flowchart': {
     icon: '📊',
     code: `graph TD
@@ -172,15 +186,15 @@ const templates = {
   }
 };
 
-export function TemplateSelector(props) {
+export function TemplateSelector(props: TemplateSelectorProps) {
   const [selectedCategory, setSelectedCategory] = createSignal('all');
   
   const categories = ['all', 'basic', 'process', 'data', 'advanced'];
   
-  const getTemplatesByCategory = (category) => {
+  const getTemplatesByCategory = (category: string) => {
     if (category === 'all') return Object.entries(templates);
     
-    const categoryMap = {
+    const categoryMap: { [key: string]: string[] } = {
       'basic': ['Flowchart', 'Pie Chart', 'Mindmap'],
       'process': ['Sequence Diagram', 'State Diagram', 'User Journey', 'Timeline'],
       'data': ['Class Diagram', 'Entity Relationship', 'Gantt Chart'],
